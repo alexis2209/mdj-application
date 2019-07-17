@@ -1,0 +1,17 @@
+# To get started with security, check out the documentation:
+# https://symfony.com/doc/current/security.html
+security:
+    providers:
+        main:
+            entity: { class: Ekino\WordpressBundle\Entity\User, property: login }
+
+    # Example firewall for an area within a Symfony application protected by a WordPress login
+    firewalls:
+        secured_area:
+            pattern:    ^/admin
+            access_denied_handler: ekino.wordpress.security.entry_point
+            entry_point: ekino.wordpress.security.entry_point
+            anonymous: ~
+
+    access_control:
+        - { path: ^/admin, roles: ROLE_WP_ADMINISTRATOR }
