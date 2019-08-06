@@ -75,7 +75,7 @@ ekino_wordpress:
         - wp_global_variable_1
         - wp_global_variable_2
     table_prefix: "wp_" # If you have a specific Wordpress table prefix
-    wordpress_directory: "%kernel.root_dir%/../../../wordpress"
+    wordpress_directory: "%kernel.root_dir%/../../../../wordpress/current"
     load_twig_extension: true # If you want to enable native WordPress functions (ie : get_option() => wp_get_option())
     enable_wordpress_listener: false # If you want to disable the WordPress request listener
     security:
