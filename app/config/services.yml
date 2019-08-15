@@ -33,3 +33,28 @@ services:
     # AppBundle\Service\ExampleService:
     #     arguments:
     #         $someArgument: 'some_value'
+
+    app.services.wordpress.woocommerce:
+        public: true
+        class: AppBundle\Services\Wordpress\WoocommerceService
+        arguments: ["@service_container"]
+
+    app.services.zanox.toysnrus:
+        public: true
+        class: AppBundle\Services\Zanox\ToysnrusService
+        arguments: ["@service_container"]
+
+    app.services.zanox.playmobile:
+        public: true
+        class: AppBundle\Services\Zanox\PlaymobileService
+        arguments: ["@service_container"]
+
+
+    app.command.import.playmobile:
+        class: AppBundle\Command\ImportPlaymobileCommand
+        arguments: ["@service_container"]
+        tags:
+            -  { name: console.command }
+
+
+
