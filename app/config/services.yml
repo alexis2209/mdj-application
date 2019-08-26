@@ -49,6 +49,11 @@ services:
         class: AppBundle\Services\Zanox\PlaymobileService
         arguments: ["@service_container"]
 
+    app.services.zanox.decoanniv:
+        public: true
+        class: AppBundle\Services\Zanox\DecoannivService
+        arguments: ["@service_container"]
+
 
     app.command.import.playmobile:
         class: AppBundle\Command\ImportPlaymobileCommand

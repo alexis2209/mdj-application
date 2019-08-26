@@ -13,7 +13,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Class ImportToysnrusCommand
  * @package AppBundle\Command
  */
-class ImportPlaymobileCommand extends Command
+class ImportDecoannivCommand extends Command
 {
     /**
      * @var Container
@@ -21,7 +21,7 @@ class ImportPlaymobileCommand extends Command
     private $container;
 
     /**
-     * ImportPlaymobileCommand constructor.
+     * ImportDecoannivCommand constructor.
      * @param Container $container
      */
     public function __construct(ContainerInterface $container)
@@ -33,36 +33,51 @@ class ImportPlaymobileCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('app:import:playmobile')
-            ->setDescription('Import XML File from toys n rus');
+            ->setName('app:import:decoanniv')
+            ->setDescription('Import XML File from Deco Anniversaire');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $woocommerce = $this->container->get('app.services.wordpress.woocommerce');
-        $xml = $this->container->get('app.services.zanox.playmobile')->getXml();
-        $categorieP = $woocommerce->getCategorie(['slug' => 'playmobile']);
+        $xml = $this->container->get('app.services.zanox.decoanniv')->getXml();
+        $categorieP = $woocommerce->getCategorie(['slug' => 'decoration-anniversaire']);
         $categParent = $categorieP[0]->id;
         foreach ($xml->prod as $product)
         {
-            $categoriesPlaymobile = explode('/', (string)$product->cat->mCat);
-            $categ = $categoriesPlaymobile[count($categoriesPlaymobile) - 1];
-            $categorie = $woocommerce->getCategorie(['slug' => urlencode($categ)]);
+            $categoriesPlaymobile = explode(' > ', (string)$product->cat->merchantProductCategoryPath);
+
+            if (isset($categoriesPlaymobile[0])){
+                $categorie1 = $woocommerce->getCategorie(['slug' => urlencode($categoriesPlaymobile[0])]);
+
+                if (!$categorie1){
+                    $categorie1 = $woocommerce->postCategorie(['name' => $categoriesPlaymobile[0], 'slug'=>urlencode($categoriesPlaymobile[0]), 'parent'=>$categParent]);
+                    $infosCateg = $categorie1;
+                    unset($categorie1);
+                    $categorie1[0] = $infosCateg;
+                }
 
 
-            if (!$categorie){
-                $categorie = $woocommerce->postCategorie(['name' => $categ, 'slug'=>urlencode($categ), 'parent'=>$categParent]);
+
+
+                if (isset($categoriesPlaymobile[count($categoriesPlaymobile) - 1])){
+                    $categ = $categoriesPlaymobile[count($categoriesPlaymobile) - 1];
+                    $categorie = $woocommerce->getCategorie(['slug' => urlencode($categ)]);
+
+                    if (!$categorie){
+                        $categorie = $woocommerce->postCategorie(['name' => $categ, 'slug'=>urlencode($categ), 'parent'=>$categorie1[0]->id]);
+                    }
+                }
             }
-
 
             $currentProduct = $woocommerce->getProducts(['sku' => (string)$product->ean]);
 
             $images = [
                 [
-                    'src' => (string)substr($product->uri->mImage, 0, strpos($product->uri->mImage, "?")).".jpg"
+                    'src' => (string)$product->uri->mImage
                 ],
                 [
-                    'src' => (string)substr($product->uri->mImage, 0, strpos($product->uri->mImage, "?")).".jpg"
+                    'src' => (string)$product->uri->mImage
                 ]
             ];
 
