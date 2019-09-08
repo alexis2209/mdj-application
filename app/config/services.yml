@@ -39,6 +39,11 @@ services:
         class: AppBundle\Services\Wordpress\WoocommerceService
         arguments: ["@service_container"]
 
+    app.services.wordpress.apiwordpress:
+        public: true
+        class: AppBundle\Services\Wordpress\ApiWordpressService
+        arguments: ["@service_container"]
+
     app.services.zanox.toysnrus:
         public: true
         class: AppBundle\Services\Zanox\ToysnrusService

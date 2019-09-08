@@ -53,7 +53,11 @@ class WoocommerceService
 
     public function postCategorie($data = [])
     {
-        return $this->woocommerce->post('products/categories', $data);
+        $cat = $this->woocommerce->post('products/categories', $data);
+        $termTax = $this->container->get('ekino.wordpress.manager.term_taxonomy')->findOneBy(['term'=>$cat->id]);
+        $termTax->setTaxonomy('blurb_product_category');
+        $this->container->get('ekino.wordpress.manager.term_taxonomy')->save($termTax);
+        return $cat;
     }
 
 
