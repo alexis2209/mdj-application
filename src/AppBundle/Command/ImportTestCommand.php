@@ -41,7 +41,7 @@ class ImportTestCommand extends Command
         $apiWordpress = $this->container->get('app.services.wordpress.apiwordpress');
         $woocommerce = $this->container->get('app.services.wordpress.woocommerce');
 
-        $decoAnnivMarket = 4278;
+        $decoAnnivMarket = 30185;
 
         $xml = $this->container->get('app.services.zanox.decoanniv')->getXml();
         $termObj = $this->container->get('ekino.wordpress.manager.term');
