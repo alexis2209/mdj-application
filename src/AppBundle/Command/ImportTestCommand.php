@@ -57,7 +57,9 @@ class ImportTestCommand extends Command
                 $categorie1 = $termObj->findOneBy(['name'=>$categoriesDecoAnniv[0]]);
 
 
-                if (!$categorie1){
+
+
+                if (!$categorie1 && !is_null($categorie1)){
                     //$categorie1 = $apiWordpress->postCategorie(['name' => $categoriesDecoAnniv[0], 'parent'=>$categParent, 'taxonomy' => 'blurb_product_category']);
                     $cat = $woocommerce->postCategorie(['name' => $categoriesDecoAnniv[0], 'slug'=>urlencode($categoriesDecoAnniv[0]), 'parent'=>$categParent]);
                     $categorie1 = $termObj->find($cat->id);
@@ -71,10 +73,12 @@ class ImportTestCommand extends Command
 
 
                 if (count($categoriesDecoAnniv) > 1 && isset($categoriesDecoAnniv[count($categoriesDecoAnniv) - 1])){
-                    $categ = $categoriesDecoAnniv[count($categoriesDecoAnniv) - 1];
-                    $categorie = $termObj->findOneBy(['name' => urlencode($categ)]);
 
-                    if (!$categorie){
+                    $categ = $categoriesDecoAnniv[count($categoriesDecoAnniv) - 1];
+                    $categorie = $termObj->findOneBy(['name' => $categ]);
+
+                    if (!$categorie && !is_null($categorie)){
+
                         $cat = $woocommerce->postCategorie(['name' => $categ, 'slug'=>urlencode($categ), 'parent'=>$categorie1->getId()]);
                         //$categorie = $apiWordpress->postCategorie(['name' => $categ, 'parent'=>$categorie1->getId(), 'taxonomy' => 'blurb_product_category']);
                         $categorie = $termObj->find($cat->id);
