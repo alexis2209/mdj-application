@@ -90,7 +90,7 @@ class ImportTestCommand extends Command
             }
 
             $productMb = array (
-                'images' => (string)$product->uri->awThumb.','.(string)$product->uri->awImage,
+                'images' => (string)$product->uri->awImage.','.(string)$product->uri->mImage,
                 'brand_name' => 'Décoration anniversaire',
                 'features' =>
                     array (),
