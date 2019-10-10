@@ -1,12 +1,6 @@
 <?php
 namespace AppBundle\Services\Wordpress;
 
-use AppBundle\Entity\Repository\CategoryRepository;
-use AppBundle\Entity\Repository\CompetitionRepository;
-use AppBundle\Entity\Repository\EventOperatorRepository;
-use AppBundle\Entity\Repository\SportRepository;
-use AppBundle\Entity\Repository\StakeChoiceRepository;
-use AppBundle\Services\Operator\OperatorResolver;
 use Automattic\WooCommerce\Client;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -20,6 +14,9 @@ class WoocommerceService
 
     private $woocommerce;
 
+    private $attributeAge;
+    private $attributeBrand;
+
 
     public function __construct(ContainerInterface $container)
     {
@@ -29,6 +26,8 @@ class WoocommerceService
         $consumer_secret = $this->container->getParameter('consumerSecretWoocommerce');
         $options = [];
         $this->woocommerce = new Client($url, $consumer_key, $consumer_secret, $options);
+
+
     }
 
     public function getProducts($data = [])
@@ -54,9 +53,17 @@ class WoocommerceService
     public function postCategorie($data = [])
     {
         $cat = $this->woocommerce->post('products/categories', $data);
-        $termTax = $this->container->get('ekino.wordpress.manager.term_taxonomy')->findOneBy(['term'=>$cat->id]);
-        $termTax->setTaxonomy('blurb_product_category');
-        $this->container->get('ekino.wordpress.manager.term_taxonomy')->save($termTax);
+        return $cat;
+    }
+
+    public function getAttributeTerm($id, $data = [])
+    {
+        return $this->woocommerce->get('products/attributes/'.$id.'/terms', $data);
+    }
+
+    public function postAttributeTerm($id, $data = [])
+    {
+        $cat = $this->woocommerce->post('products/attributes/'.$id.'/terms', $data);
         return $cat;
     }
 
