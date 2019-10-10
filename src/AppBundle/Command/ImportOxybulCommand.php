@@ -27,8 +27,8 @@ class ImportOxybulCommand extends Command
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-        $this->attributeAge = 6;
-        $this->attributeBrand = 5;
+        $this->attributeAge = 1;
+        $this->attributeBrand = 2;
         parent::__construct();
     }
 
