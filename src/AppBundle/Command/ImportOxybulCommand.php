@@ -49,16 +49,16 @@ class ImportOxybulCommand extends Command
             $categoriesOxybul = explode(' > ', (string)$product->cat->merchantProductCategoryPath);
             array_pop($categoriesOxybul);
             $categorie = false;
+            //var_dump($categoriesOxybul);exit;
             foreach ($categoriesOxybul as $key=>$val){
 
                 $tab = [
                     'name' => $val,
-                    'slug'=>urlencode($val)
                 ];
                 if (isset($categoriesOxybul[$key - 1]) && $categorie){
                     $tab['parent'] = $categorie->id;
                 }
-                $categorie = $woocommerce->getCategorie(['slug' => urlencode($val)]);
+                $categorie = $woocommerce->getCategorie(['slug' => $val]);
                 if (!$categorie){
                     $categorie = $woocommerce->postCategorie($tab);
                 }else{
@@ -92,6 +92,7 @@ class ImportOxybulCommand extends Command
 
             $data = [];
             $data['images'] = $images;
+            //$data['Brands'] = 567;
             $data['categories'] = $categories;
             $data['name'] = (string)$product->text->name;
             $data['type'] = 'external';
@@ -104,6 +105,7 @@ class ImportOxybulCommand extends Command
             $data['attributes'] = [
                 ['id'=>$this->attributeBrand, 'name'=>'Brand','visible' => true, 'options' => [$brand]],
                 ['id'=>$this->attributeAge, 'name'=>'Age','visible' => true, 'options' => [$age]],
+                //['id'=>567],
             ];
 
 
@@ -115,6 +117,7 @@ class ImportOxybulCommand extends Command
                 $woocommerce->putProduct(current($currentProduct)->id, $data);
             }
             echo $i . ' ' . (string)$product->text->name . "\n";
+            exit;
             $i++;
         }
 
