@@ -4,3 +4,6 @@ app:
 
 ekino_wordpress:
     resource: "@EkinoWordpressBundle/Resources/config/routing.xml"
+
+sbs_adminlte:
+    resource: "@SbSAdminLTEBundle/Resources/config/routing.xml"

@@ -25,7 +25,9 @@
         "doctrine/doctrine-bundle": "^1.6",
         "doctrine/orm": "^2.5",
         "ekino/wordpress-bundle": "dev-master",
+        "friendsofsymfony/jsrouting-bundle": "^2.1",
         "incenteev/composer-parameter-handler": "^2.0",
+        "sbs/symfony-adminlte-bundle": "^1.1",
         "sensio/distribution-bundle": "^5.0.19",
         "sensio/framework-extra-bundle": "^5.0.0",
         "symfony/monolog-bundle": "^3.1.0",
@@ -43,6 +45,7 @@
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
+            "SbS\\AdminLTEBundle\\Composer\\ScriptHandler::buildAssets",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
@@ -66,6 +69,10 @@
         "symfony-assets-install": "relative",
         "incenteev-parameters": {
             "file": "app/config/parameters.yml"
+        },
+        "installer-types": ["library", "component"],
+        "installer-paths": {
+            "web/components/{$name}/": ["type:component"]
         },
         "branch-alias": null
     }

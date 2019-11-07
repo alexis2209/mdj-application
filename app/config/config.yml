@@ -11,6 +11,8 @@ parameters:
 framework:
     #esi: ~
     #translator: { fallbacks: ['%locale%'] }
+    templating:
+        engines: ['twig']
     secret: '%secret%'
     router:
         resource: '%kernel.project_dir%/app/config/routing.yml'
@@ -75,9 +77,20 @@ ekino_wordpress:
         - wp_global_variable_1
         - wp_global_variable_2
     table_prefix: "wp_" # If you have a specific Wordpress table prefix
-    wordpress_directory: "%kernel.root_dir%/../../../../wordpress/current"
+    wordpress_directory: "%kernel.root_dir%/../../../../wordpress"
     load_twig_extension: true # If you want to enable native WordPress functions (ie : get_option() => wp_get_option())
     enable_wordpress_listener: false # If you want to disable the WordPress request listener
     security:
         firewall_name: "secured_area" # This is the firewall default name
         login_url: "/wp-login.php" # Absolute URL to the wordpress login page
+    services:
+        term:
+            repository_class: AppBundle\Entity\Repository\MyTermRepository
+
+
+# Assetic Configuration
+assetic:
+    debug: "%kernel.debug%"
+    use_controller: "%kernel.debug%"
+    filters:
+        cssrewrite: ~

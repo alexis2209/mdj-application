@@ -1,0 +1,46 @@
+{% extends '@SbSAdminLTE/Layout/base.html.twig' %}
+
+{% block corestyles %}
+    {{ parent() }}
+    {% stylesheets output="css/components.min.css" filter="cssrewrite"
+    "components/bootstrap3-dialog/dist/css/bootstrap-dialog.min.css" %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+{% endblock %}
+
+{% block corejs %}
+    {{ parent() }}
+    {% javascripts output="js/components.min.js"
+    "components/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js" %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}
+
+{% block admin_lte_logo %}
+    <a href="{{ path('admin_dashboard') }}" class="logo">
+        <span class="logo-mini"><i class="fa fa-lg fa-home"></i></span>
+        <span class="logo-lg">My Application</span>
+    </a>
+{% endblock %}
+
+
+{% block admin_lte_sidebar %}
+    <!-- sidebar menu: : style can be found in sidebar.less -->
+    <ul class="sidebar-menu" data-widget="tree">
+        <li class="header">MAIN NAVIGATION</li>
+        <li class="{% if app.request.get('_route') == "homepage" %}active{% endif %}"><a href="{{ path("admin_dashboard") }}"><i class="fa fa-dashboard current"></i> <span>Dashboard</span></a></li>
+        <li class="{% if app.request.get('_route') == "categories" %}active{% endif %}"><a href="{{ path("admin_categories_cdiscount") }}"><i class="fa fa-users"></i> <span>Categories Cdiscount</span></a></li>
+        <li class="{% if app.request.get('_route') == "event-index" %}active{% endif %}"><a href="{{ path("admin_dashboard") }}"><i class="fa fa-sitemap"></i> <span>Event Service</span></a></li>
+
+    </ul>
+{% endblock %}
+
+{% block admin_lte_footer %}
+    ici content
+{% endblock %}
+
+
+
+
+
+

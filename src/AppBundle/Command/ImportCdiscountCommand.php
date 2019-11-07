@@ -1,6 +1,7 @@
 <?php
 namespace AppBundle\Command;
 
+use AppBundle\Entity\CatCdiscount;
 use Automattic\WooCommerce\Client;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Console\Command\Command;
@@ -10,10 +11,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class ImportOxybulCommand
+ * Class ImportCdiscountCommand
  * @package AppBundle\Command
  */
-class ImportOxybulCommand extends Command
+class ImportCdiscountCommand extends Command
 {
     /**
      * @var Container
@@ -21,7 +22,7 @@ class ImportOxybulCommand extends Command
     private $container;
 
     /**
-     * ImportPlaymobileCommand constructor.
+     * ImportCdiscountCommand constructor.
      * @param Container $container
      */
     public function __construct(ContainerInterface $container)
@@ -29,26 +30,37 @@ class ImportOxybulCommand extends Command
         $this->container = $container;
         $this->attributeAge = 6;
         $this->attributeBrand = 7;
-        //$this->retailersNum = 28146;
-        $this->retailersNum = 28319;
+        //$this->retailersNum = 28147;
+        $this->retailersNum = 28317;
         parent::__construct();
     }
 
     protected function configure()
     {
         $this
-            ->setName('app:import:oxybul')
-            ->setDescription('Import XML File from toys n rus');
+            ->setName('app:import:cdiscount')
+            ->setDescription('Import XML File from Cdiscount');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $woocommerce = $this->container->get('app.services.wordpress.woocommerce');
-        $xml = $this->container->get('app.services.zanox.oxybul')->getXml();
+        $xml = $this->container->get('app.services.zanox.cdiscount')->getXml();
         $i = 1;
         foreach ($xml->prod as $product)
         {
-            $currentProduct = $woocommerce->getProducts(['sku' => (string)$product->ean]);
+            if ((string)$product->cat->mCat != 'JEUX - JOUETS'){
+                continue;
+            }
+            if (!is_null((string)$product->ean) && (string)$product->ean != ''){
+                $currentProduct = $woocommerce->getProducts(['sku' => (string)$product->ean]);
+            }else{
+                continue;
+            }
+
+            if ($i < 401){
+                $i++;continue;
+            }
 
             $data = [];
             $data['type'] = 'simple';
@@ -56,54 +68,52 @@ class ImportOxybulCommand extends Command
             $data['sale_price'] = (string)$product->price->buynow;
 
             if (!$currentProduct) {
-                $categoriesOxybul = explode(' > ', (string)$product->cat->merchantProductCategoryPath);
-                array_pop($categoriesOxybul);
-                $categorie = false;
+                $categorieId = NULL;
 
-                foreach ($categoriesOxybul as $key=>$val){
 
-                    $tab = [
-                        'name' => $val,
-                    ];
-                    if (isset($categoriesOxybul[$key - 1]) && $categorie){
-                        $tab['parent'] = $categorie->id;
-                    }
-                    $categorie = $woocommerce->getCategorie(['slug' => $val]);
-                    if (!$categorie){
-                        $categorie = $woocommerce->postCategorie($tab);
-                    }else{
-                        $categorie = $categorie[0];
-                    }
+                //var_dump($product);exit;
+                $categoriesCdiscount = (string)$product->cat->merchantProductCategoryPath;
 
-                    $categorieId = $categorie->id;
+                $testExist = $this->container->get('doctrine')->getManager()->getRepository(CatCdiscount::class)->findOneBy(['libelle' => $categoriesCdiscount]);
+
+                if (!$testExist){
+                    $cat = new CatCdiscount();
+
+                    $cat->setLibelle($categoriesCdiscount);
+                    $this->container->get('doctrine')->getManager()->persist($cat);
+                    $this->container->get('doctrine')->getManager()->flush();
+                    echo "CATEGORIE ".(string)$product->cat->merchantProductCategoryPath . "\n";
+                    continue;
+                }elseif (!is_null($testExist->getWpCategorie())){
+                    $categorieId = $testExist->getWpCategorie();
+                }else{
+                    continue;
                 }
 
+
                 $brand = (string)$product->brand->brandName;
-                $age = (string)$product->custom1;
-
-
 
 
                 $images = [
                     [
-                        'src' => (string)$product->uri->mImage
+                        'src' => (string)$product->uri->awThumb.".jpg"
                     ],
                     [
-                        'src' => (string)$product->uri->largeImage
+                        'src' => (string)$product->uri->awImage.".jpg"
                     ]
                 ];
 
                 $categories = [
                     [
                         'id' => $categorieId
-                    ],
+                    ]
                 ];
 
                 $retailer = [];
                 $retailer[] = [
                     'id' => $this->retailersNum,
                     'product_price' => (string)$product->price->buynow,
-                    'product_location' => (string)$product->price->productPriceOld,
+                    'product_location' => NULL,
                     'product_logo' => NULL,
                     'product_url' => (string)$product->uri->awTrack
                 ];
@@ -116,7 +126,7 @@ class ImportOxybulCommand extends Command
                 ];
                 $metadata[] = [
                     'key' => 'fifu_image_url',
-                    'value' => $retailer
+                    'value' => (string)$product->uri->awImage
                 ];
                 $metadata[] = [
                     'key' => 'fifu_image_alt',
@@ -128,14 +138,14 @@ class ImportOxybulCommand extends Command
                 $data['name'] = (string)$product->text->name;
                 $data['type'] = 'simple';
                 $data['description'] = (string)$product->text->desc;
-                $data['short_description'] = (string)$product->text->productShortDescription;
+                $data['short_description'] = (string)$product->text->desc;
                 $data['sku'] = (string)$product->ean;
                 $data['meta_data'] = $metadata;
                 $data['attributes'] = [
-                    ['name'=>'Marque','visible' => true, 'options' => [$brand]],
-                    ['name'=>'Age','visible' => true, 'options' => [$age]],
+                    ['id'=>$this->attributeBrand, 'name'=>'Brand','visible' => true, 'options' => [$brand]],
                 ];
-                $woocommerce->postProduct($data);
+
+                $jouet = $woocommerce->postProduct($data);
             }else{
                 $metasdata = current($currentProduct)->meta_data;
                 $retailer = [];
@@ -146,7 +156,7 @@ class ImportOxybulCommand extends Command
                     $retailer[] = [
                         'id' => $this->retailersNum,
                         'product_price' => (string)$product->price->buynow,
-                        'product_location' => (string)$product->price->productPriceOld,
+                        'product_location' => NULL,
                         'product_logo' => NULL,
                         'product_url' => (string)$product->uri->awTrack
                     ];
@@ -163,7 +173,7 @@ class ImportOxybulCommand extends Command
                         $value[] = [
                             'id' => $this->retailersNum,
                             'product_price' => (string)$product->price->buynow,
-                            'product_location' => (string)$product->price->productPriceOld,
+                            'product_location' => NULL,
                             'product_logo' => NULL,
                             'product_url' => (string)$product->uri->awTrack
                         ];
@@ -171,7 +181,7 @@ class ImportOxybulCommand extends Command
                         $value[$retailer] = [
                             'id' => $this->retailersNum,
                             'product_price' => (string)$product->price->buynow,
-                            'product_location' => (string)$product->price->productPriceOld,
+                            'product_location' => NULL,
                             'product_logo' => NULL,
                             'product_url' => (string)$product->uri->awTrack
                         ];
@@ -183,12 +193,15 @@ class ImportOxybulCommand extends Command
                         'value' => $value
                     ];
                 }
+                $metadata[] = [
+                    'key' => 'fifu_image_url',
+                    'value' => (string)$product->uri->awImage
+                ];
+                $metadata[] = [
+                    'key' => 'fifu_image_alt',
+                    'value' => (string)$product->text->name
+                ];
                 $data['meta_data'] = $metadata;
-
-                /*var_dump($data);
-                if ($i == 2){
-                    exit;
-                }*/
 
                 $woocommerce->putProduct(current($currentProduct)->id, $data);
             }
@@ -197,7 +210,7 @@ class ImportOxybulCommand extends Command
             $i++;
         }
 
-
+        echo $i . "\n";
         echo 'ok';
     }
 
