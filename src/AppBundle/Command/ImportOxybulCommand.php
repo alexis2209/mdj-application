@@ -48,12 +48,23 @@ class ImportOxybulCommand extends Command
         $i = 1;
         foreach ($xml->prod as $product)
         {
-            $currentProduct = $woocommerce->getProducts(['sku' => (string)$product->ean]);
+            if (!is_null((string)$product->ean) && (string)$product->ean != ''){
+                $currentProduct = $woocommerce->getProducts(['sku' => (string)$product->ean]);
+            }else{
+                continue;
+            }
+
 
             $data = [];
-            $data['type'] = 'simple';
-            $data['regular_price'] = (string)$product->price->productPriceOld;
-            $data['sale_price'] = (string)$product->price->buynow;
+            $data['type'] = 'external';
+            if ($currentProduct && (string)$product->price->buynow <= current($currentProduct)->price){
+                if ((string)$product->price->productPriceOld && (string)$product->price->productPriceOld > 0){
+                    $data['regular_price'] = (string)$product->price->productPriceOld;
+                }else{
+                    $data['regular_price'] = NULL;
+                }
+                $data['sale_price'] = (string)$product->price->buynow;
+            }
 
             if (!$currentProduct) {
                 $categoriesOxybul = explode(' > ', (string)$product->cat->merchantProductCategoryPath);
@@ -123,10 +134,10 @@ class ImportOxybulCommand extends Command
                     'value' => (string)$product->text->name
                 ];
 
-                //$data['images'] = $images;
+                $data['images'] = $images;
                 $data['categories'] = $categories;
                 $data['name'] = (string)$product->text->name;
-                $data['type'] = 'simple';
+                $data['type'] = 'external';
                 $data['description'] = (string)$product->text->desc;
                 $data['short_description'] = (string)$product->text->productShortDescription;
                 $data['sku'] = (string)$product->ean;
@@ -137,6 +148,7 @@ class ImportOxybulCommand extends Command
                 ];
                 $woocommerce->postProduct($data);
             }else{
+                $data['type'] = 'external';
                 $metasdata = current($currentProduct)->meta_data;
                 $retailer = [];
                 $retailers = [];

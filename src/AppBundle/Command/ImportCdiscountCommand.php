@@ -30,8 +30,8 @@ class ImportCdiscountCommand extends Command
         $this->container = $container;
         $this->attributeAge = 6;
         $this->attributeBrand = 7;
-        //$this->retailersNum = 28147;
-        $this->retailersNum = 28317;
+        $this->retailersNum = 28147;
+        //$this->retailersNum = 28317;
         parent::__construct();
     }
 
@@ -52,20 +52,20 @@ class ImportCdiscountCommand extends Command
             if ((string)$product->cat->mCat != 'JEUX - JOUETS'){
                 continue;
             }
+
             if (!is_null((string)$product->ean) && (string)$product->ean != ''){
                 $currentProduct = $woocommerce->getProducts(['sku' => (string)$product->ean]);
             }else{
                 continue;
             }
-
-            if ($i < 401){
-                $i++;continue;
-            }
-
             $data = [];
-            $data['type'] = 'simple';
-            $data['regular_price'] = (string)$product->price->productPriceOld;
-            $data['sale_price'] = (string)$product->price->buynow;
+            $data['type'] = 'external';
+            if ($currentProduct && (string)$product->price->buynow <= current($currentProduct)->price){
+                if ((string)$product->price->productPriceOld && (string)$product->price->productPriceOld > 0){
+                    $data['regular_price'] = (string)$product->price->productPriceOld;
+                }
+                $data['sale_price'] = (string)$product->price->buynow;
+            }
 
             if (!$currentProduct) {
                 $categorieId = NULL;
@@ -125,15 +125,14 @@ class ImportCdiscountCommand extends Command
                     'value' => $retailer
                 ];
                 $metadata[] = [
-                    'key' => 'fifu_image_url',
-                    'value' => (string)$product->uri->awImage
+                    'key' => '_knawatfibu_url',
+                    'value' => ['img_url' => (string)$product->uri->mImage, 'width' => 390, 'height' => 280]
                 ];
                 $metadata[] = [
-                    'key' => 'fifu_image_alt',
+                    'key' => '_knawatfibu_alt',
                     'value' => (string)$product->text->name
                 ];
 
-                //$data['images'] = $images;
                 $data['categories'] = $categories;
                 $data['name'] = (string)$product->text->name;
                 $data['type'] = 'simple';
@@ -147,6 +146,9 @@ class ImportCdiscountCommand extends Command
 
                 $jouet = $woocommerce->postProduct($data);
             }else{
+
+
+
                 $metasdata = current($currentProduct)->meta_data;
                 $retailer = [];
                 $retailers = [];
@@ -194,11 +196,11 @@ class ImportCdiscountCommand extends Command
                     ];
                 }
                 $metadata[] = [
-                    'key' => 'fifu_image_url',
-                    'value' => (string)$product->uri->awImage
+                    'key' => '_knawatfibu_url',
+                    'value' => ['img_url' => (string)$product->uri->mImage, 'width' => 390, 'height' => 280]
                 ];
                 $metadata[] = [
-                    'key' => 'fifu_image_alt',
+                    'key' => '_knawatfibu_alt',
                     'value' => (string)$product->text->name
                 ];
                 $data['meta_data'] = $metadata;
