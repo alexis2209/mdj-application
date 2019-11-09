@@ -194,13 +194,12 @@ class ImportCdiscountCommand extends Command
 
                 $data['meta_data'] = $metadata;
 
-                if ((string)$product->ean != 3517132239859){
-                    var_dump($currentProduct);
-                    var_dump($data);
-                    exit;
-                }
+
                 $woocommerce->putProduct(current($currentProduct)->id, $data);
                 echo $i . ' ' . (string)$product->text->name . " - " . (string)$product->ean . "\n";
+                if ((string)$product->ean != 3517132239859){
+                    exit;
+                }
                 //exit;
             }
 
