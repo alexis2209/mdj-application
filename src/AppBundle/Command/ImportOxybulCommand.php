@@ -204,7 +204,6 @@ class ImportOxybulCommand extends Command
             }
 
             echo $i . ' ' . (string)$product->text->name . "\n";
-            exit;
             $i++;
         }
 
