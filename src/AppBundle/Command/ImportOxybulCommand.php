@@ -197,20 +197,10 @@ class ImportOxybulCommand extends Command
                 ];
                 $data['meta_data'] = $metadata;
 
-                /*var_dump($data);
-                if ($i == 2){
-                    exit;
-                }*/
-
                 $woocommerce->putProduct(current($currentProduct)->id, $data);
             }
-
-            //echo $i . ' ' . (string)$product->text->name . "\n";
             $i++;
         }
-
-
-        //echo 'ok';
     }
 
 }
