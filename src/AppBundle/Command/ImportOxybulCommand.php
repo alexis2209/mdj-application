@@ -93,17 +93,6 @@ class ImportOxybulCommand extends Command
                 $age = (string)$product->custom1;
 
 
-
-
-                $images = [
-                    [
-                        'src' => (string)$product->uri->mImage
-                    ],
-                    [
-                        'src' => (string)$product->uri->largeImage
-                    ]
-                ];
-
                 $categories = [
                     [
                         'id' => $categorieId
@@ -126,15 +115,15 @@ class ImportOxybulCommand extends Command
                     'value' => $retailer
                 ];
                 $metadata[] = [
-                    'key' => 'fifu_image_url',
-                    'value' => $retailer
+                    'key' => '_knawatfibu_url',
+                    'value' => ['img_url' => (string)$product->uri->mImage, 'width' => 390, 'height' => 280]
                 ];
                 $metadata[] = [
-                    'key' => 'fifu_image_alt',
+                    'key' => '_knawatfibu_alt',
                     'value' => (string)$product->text->name
                 ];
 
-                $data['images'] = $images;
+                $data['images'] = [];
                 $data['categories'] = $categories;
                 $data['name'] = (string)$product->text->name;
                 $data['type'] = 'external';
@@ -149,6 +138,7 @@ class ImportOxybulCommand extends Command
                 $woocommerce->postProduct($data);
             }else{
                 $data['type'] = 'external';
+                $data['images'] = [];
                 $metasdata = current($currentProduct)->meta_data;
                 $retailer = [];
                 $retailers = [];
@@ -194,6 +184,14 @@ class ImportOxybulCommand extends Command
                         'key' => '_product_retailers',
                         'value' => $value
                     ];
+                    $metadata[] = [
+                        'key' => '_knawatfibu_url',
+                        'value' => ['img_url' => (string)$product->uri->mImage, 'width' => 390, 'height' => 280]
+                    ];
+                    $metadata[] = [
+                        'key' => '_knawatfibu_alt',
+                        'value' => (string)$product->text->name
+                    ];
                 }
                 $data['meta_data'] = $metadata;
 
@@ -206,6 +204,7 @@ class ImportOxybulCommand extends Command
             }
 
             echo $i . ' ' . (string)$product->text->name . "\n";
+            exit;
             $i++;
         }
 
