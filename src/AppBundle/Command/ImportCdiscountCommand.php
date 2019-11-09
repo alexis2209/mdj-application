@@ -30,8 +30,8 @@ class ImportCdiscountCommand extends Command
         $this->container = $container;
         $this->attributeAge = 6;
         $this->attributeBrand = 7;
-        $this->retailersNum = 28147;
-        //$this->retailersNum = 28317;
+        //$this->retailersNum = 28147;
+        $this->retailersNum = 28317;
         parent::__construct();
     }
 
