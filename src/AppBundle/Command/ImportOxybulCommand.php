@@ -203,12 +203,12 @@ class ImportOxybulCommand extends Command
                 $woocommerce->putProduct(current($currentProduct)->id, $data);
             }
 
-            echo $i . ' ' . (string)$product->text->name . "\n";
+            //echo $i . ' ' . (string)$product->text->name . "\n";
             $i++;
         }
 
 
-        echo 'ok';
+        //echo 'ok';
     }
 
 }

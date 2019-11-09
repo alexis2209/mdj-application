@@ -63,6 +63,8 @@ class ImportCdiscountCommand extends Command
             if ($currentProduct && (string)$product->price->buynow <= current($currentProduct)->price){
                 if ((string)$product->price->productPriceOld && (string)$product->price->productPriceOld > 0){
                     $data['regular_price'] = (string)$product->price->productPriceOld;
+                }else{
+                    $data['regular_price'] = NULL;
                 }
                 $data['sale_price'] = (string)$product->price->buynow;
             }
@@ -93,16 +95,6 @@ class ImportCdiscountCommand extends Command
 
                 $brand = (string)$product->brand->brandName;
 
-
-                $images = [
-                    [
-                        'src' => (string)$product->uri->awThumb.".jpg"
-                    ],
-                    [
-                        'src' => (string)$product->uri->awImage.".jpg"
-                    ]
-                ];
-
                 $categories = [
                     [
                         'id' => $categorieId
@@ -113,7 +105,7 @@ class ImportCdiscountCommand extends Command
                 $retailer[] = [
                     'id' => $this->retailersNum,
                     'product_price' => (string)$product->price->buynow,
-                    'product_location' => NULL,
+                    'product_location' => (string)$product->price->productPriceOld,
                     'product_logo' => NULL,
                     'product_url' => (string)$product->uri->awTrack
                 ];
@@ -135,7 +127,6 @@ class ImportCdiscountCommand extends Command
 
                 $data['categories'] = $categories;
                 $data['name'] = (string)$product->text->name;
-                $data['type'] = 'simple';
                 $data['description'] = (string)$product->text->desc;
                 $data['short_description'] = (string)$product->text->desc;
                 $data['sku'] = (string)$product->ean;
@@ -146,9 +137,6 @@ class ImportCdiscountCommand extends Command
 
                 $jouet = $woocommerce->postProduct($data);
             }else{
-
-
-
                 $metasdata = current($currentProduct)->meta_data;
                 $retailer = [];
                 $retailers = [];
@@ -175,7 +163,7 @@ class ImportCdiscountCommand extends Command
                         $value[] = [
                             'id' => $this->retailersNum,
                             'product_price' => (string)$product->price->buynow,
-                            'product_location' => NULL,
+                            'product_location' => (string)$product->price->productPriceOld,
                             'product_logo' => NULL,
                             'product_url' => (string)$product->uri->awTrack
                         ];
@@ -183,7 +171,7 @@ class ImportCdiscountCommand extends Command
                         $value[$retailer] = [
                             'id' => $this->retailersNum,
                             'product_price' => (string)$product->price->buynow,
-                            'product_location' => NULL,
+                            'product_location' => (string)$product->price->productPriceOld,
                             'product_logo' => NULL,
                             'product_url' => (string)$product->uri->awTrack
                         ];
@@ -194,21 +182,24 @@ class ImportCdiscountCommand extends Command
                         'key' => '_product_retailers',
                         'value' => $value
                     ];
+                    $metadata[] = [
+                        'key' => '_knawatfibu_url',
+                        'value' => ['img_url' => (string)$product->uri->mImage, 'width' => 390, 'height' => 280]
+                    ];
+                    $metadata[] = [
+                        'key' => '_knawatfibu_alt',
+                        'value' => (string)$product->text->name
+                    ];
                 }
-                $metadata[] = [
-                    'key' => '_knawatfibu_url',
-                    'value' => ['img_url' => (string)$product->uri->mImage, 'width' => 390, 'height' => 280]
-                ];
-                $metadata[] = [
-                    'key' => '_knawatfibu_alt',
-                    'value' => (string)$product->text->name
-                ];
+
                 $data['meta_data'] = $metadata;
 
                 $woocommerce->putProduct(current($currentProduct)->id, $data);
+                echo $i . ' ' . (string)$product->text->name . "\n";
+                exit;
             }
 
-            echo $i . ' ' . (string)$product->text->name . "\n";
+            //echo $i . ' ' . (string)$product->text->name . "\n";
             $i++;
         }
 

@@ -21,12 +21,12 @@ class CdiscountService
 
 
     public function getXml(){
-        /*file_put_contents($this->_fileC, fopen($this->_url, 'r'));
+        file_put_contents($this->_fileC, fopen($this->_url, 'r'));
 
         $string = implode("", gzfile($this->_fileC));
         $fp = fopen($this->_file, "w");
         fwrite($fp, $string, strlen($string));
-        fclose($fp);*/
+        fclose($fp);
 
         if (file_exists($this->_file)) {
             $xml = simplexml_load_file($this->_file);
