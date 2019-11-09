@@ -64,8 +64,10 @@ class ImportOxybulCommand extends Command
                     $data['regular_price'] = NULL;
                 }
                 $data['sale_price'] = (string)$product->price->buynow;
-                $data['external_url'] = (string)$product->uri->awTrack;
+
             }
+
+            $data['external_url'] = (string)$product->uri->awTrack;
 
             if (!$currentProduct) {
                 $categoriesOxybul = explode(' > ', (string)$product->cat->merchantProductCategoryPath);
