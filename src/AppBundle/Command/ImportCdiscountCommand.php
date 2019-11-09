@@ -182,14 +182,6 @@ class ImportCdiscountCommand extends Command
                         'key' => '_product_retailers',
                         'value' => $value
                     ];
-                    $metadata[] = [
-                        'key' => '_knawatfibu_url',
-                        'value' => ['img_url' => (string)$product->uri->mImage, 'width' => 390, 'height' => 280]
-                    ];
-                    $metadata[] = [
-                        'key' => '_knawatfibu_alt',
-                        'value' => (string)$product->text->name
-                    ];
                 }
 
                 $data['meta_data'] = $metadata;
