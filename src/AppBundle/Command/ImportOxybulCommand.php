@@ -64,6 +64,7 @@ class ImportOxybulCommand extends Command
                     $data['regular_price'] = NULL;
                 }
                 $data['sale_price'] = (string)$product->price->buynow;
+                $data['external_url'] = (string)$product->uri->awTrack;
             }
 
             if (!$currentProduct) {
@@ -184,15 +185,16 @@ class ImportOxybulCommand extends Command
                         'key' => '_product_retailers',
                         'value' => $value
                     ];
-                    $metadata[] = [
-                        'key' => '_knawatfibu_url',
-                        'value' => ['img_url' => (string)$product->uri->largeImage, 'width' => 390, 'height' => 280]
-                    ];
-                    $metadata[] = [
-                        'key' => '_knawatfibu_alt',
-                        'value' => (string)$product->text->name
-                    ];
+
                 }
+                $metadata[] = [
+                    'key' => '_knawatfibu_url',
+                    'value' => ['img_url' => (string)$product->uri->largeImage, 'width' => 390, 'height' => 280]
+                ];
+                $metadata[] = [
+                    'key' => '_knawatfibu_alt',
+                    'value' => (string)$product->text->name
+                ];
                 $data['meta_data'] = $metadata;
 
                 /*var_dump($data);
