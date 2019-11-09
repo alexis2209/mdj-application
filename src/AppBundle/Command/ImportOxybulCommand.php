@@ -116,7 +116,7 @@ class ImportOxybulCommand extends Command
                 ];
                 $metadata[] = [
                     'key' => '_knawatfibu_url',
-                    'value' => ['img_url' => (string)$product->uri->mImage, 'width' => 390, 'height' => 280]
+                    'value' => ['img_url' => (string)$product->uri->largeImage, 'width' => 390, 'height' => 280]
                 ];
                 $metadata[] = [
                     'key' => '_knawatfibu_alt',
@@ -186,7 +186,7 @@ class ImportOxybulCommand extends Command
                     ];
                     $metadata[] = [
                         'key' => '_knawatfibu_url',
-                        'value' => ['img_url' => (string)$product->uri->mImage, 'width' => 390, 'height' => 280]
+                        'value' => ['img_url' => (string)$product->uri->largeImage, 'width' => 390, 'height' => 280]
                     ];
                     $metadata[] = [
                         'key' => '_knawatfibu_alt',
