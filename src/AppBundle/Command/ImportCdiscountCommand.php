@@ -189,6 +189,8 @@ class ImportCdiscountCommand extends Command
 
 
                 $woocommerce->putProduct(current($currentProduct)->id, $data);
+                echo $i . ' ' . (string)$product->text->name . "\n";
+                exit;
             }
 
             echo $i . ' ' . (string)$product->text->name . "\n";
