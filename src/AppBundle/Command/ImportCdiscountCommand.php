@@ -67,6 +67,7 @@ class ImportCdiscountCommand extends Command
                     $data['regular_price'] = NULL;
                 }
                 $data['sale_price'] = (string)$product->price->buynow;
+                $data['external_url'] = (string)$product->uri->awTrack;
             }
 
             if (!$currentProduct) {
@@ -188,14 +189,9 @@ class ImportCdiscountCommand extends Command
 
 
                 $woocommerce->putProduct(current($currentProduct)->id, $data);
-                echo $i . ' ' . (string)$product->text->name . " - " . (string)$product->ean . "\n";
-                if ((string)$product->ean != 3517132239859){
-                    exit;
-                }
-                //exit;
             }
 
-            //echo $i . ' ' . (string)$product->text->name . "\n";
+            echo $i . ' ' . (string)$product->text->name . "\n";
             $i++;
         }
 
