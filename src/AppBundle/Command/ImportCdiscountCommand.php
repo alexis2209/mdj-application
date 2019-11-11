@@ -147,7 +147,7 @@ class ImportCdiscountCommand extends Command
                     $retailer[] = [
                         'id' => $this->retailersNum,
                         'product_price' => (string)$product->price->buynow,
-                        'product_location' => NULL,
+                        'product_location' => (string)$product->price->productPriceOld,
                         'product_logo' => NULL,
                         'product_url' => (string)$product->uri->awTrack
                     ];
