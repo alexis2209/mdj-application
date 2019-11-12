@@ -144,10 +144,10 @@ class ImportCdiscountCommand extends Command
                     $data['external_url'] = (string)$product->uri->awTrack;
                 }
 
-                if (!(string)$product->price->buynow ||(string)$product->price->buynow == NULL){
+                if (!current($currentProduct)->price ||current($currentProduct)->price == NULL){
                     $data['sale_price'] = (string)$product->price->buynow;
                 }
-                if (!(string)$product->uri->awTrack ||(string)$product->uri->awTrack == NULL){
+                if (!current($currentProduct)->external_url ||current($currentProduct)->external_url == NULL){
                     $data['external_url'] = (string)$product->uri->awTrack;
                 }
 
