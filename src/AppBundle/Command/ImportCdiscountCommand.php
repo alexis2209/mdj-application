@@ -201,9 +201,9 @@ class ImportCdiscountCommand extends Command
 
                 $data['meta_data'] = $metadata;
 
-                var_dump(current($currentProduct));
-                var_dump($data);exit;
+
                 $woocommerce->putProduct(current($currentProduct)->id, $data);
+                var_dump($data);exit;
             }
 
             echo $i . ' ' . (string)$product->text->name . "\n";
