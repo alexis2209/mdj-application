@@ -118,9 +118,11 @@ class ImportCdiscountCommand extends Command
                 ];
 
                 $data['sale_price'] = (string)$product->price->buynow;
+                $data['regular_price'] = (string)$product->price->buynow;
                 if ((string)$product->price->productPriceOld && (string)$product->price->productPriceOld > 0){
                     $data['regular_price'] = (string)$product->price->productPriceOld;
                 }
+
                 $data['external_url'] = (string)$product->uri->awTrack;
                 $data['categories'] = $categories;
                 $data['name'] = (string)$product->text->name;
@@ -134,23 +136,29 @@ class ImportCdiscountCommand extends Command
 
                 $jouet = $woocommerce->postProduct($data);
             }else{
+
+                $data['sale_price'] = (string)$product->price->buynow;
+                $data['regular_price'] = (string)$product->price->buynow;
+                if ((string)$product->price->productPriceOld && (string)$product->price->productPriceOld > 0){
+                    $data['regular_price'] = (string)$product->price->productPriceOld;
+                }
+
+                if (!current($currentProduct)->external_url ||current($currentProduct)->external_url == NULL ||current($currentProduct)->external_url == ""){
+                    $data['external_url'] = (string)$product->uri->awTrack;
+                }
+
+
                 if ((string)$product->price->buynow <= current($currentProduct)->sale_price){
                     if ((string)$product->price->productPriceOld && (string)$product->price->productPriceOld > 0){
                         $data['regular_price'] = (string)$product->price->productPriceOld;
                     }else{
-                        $data['regular_price'] = NULL;
+                        $data['regular_price'] = (string)$product->price->buynow;
                     }
                     $data['sale_price'] = (string)$product->price->buynow;
                     $data['external_url'] = (string)$product->uri->awTrack;
                 }
 
-                if (!current($currentProduct)->sale_price ||current($currentProduct)->sale_price == NULL ||current($currentProduct)->sale_price == ""){
-                    $data['sale_price'] = (string)$product->price->buynow;
-                    $data['regular_price'] = (string)$product->price->buynow;
-                }
-                if (!current($currentProduct)->external_url ||current($currentProduct)->external_url == NULL ||current($currentProduct)->external_url == ""){
-                    $data['external_url'] = (string)$product->uri->awTrack;
-                }
+
 
 
                 $metasdata = current($currentProduct)->meta_data;
@@ -204,7 +212,6 @@ class ImportCdiscountCommand extends Command
 
 
                 $woocommerce->putProduct(current($currentProduct)->id, $data);
-                var_dump($data);exit;
             }
 
             echo $i . ' ' . (string)$product->text->name . "\n";
