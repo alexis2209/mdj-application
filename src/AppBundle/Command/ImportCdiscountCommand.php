@@ -60,15 +60,6 @@ class ImportCdiscountCommand extends Command
             }
             $data = [];
             $data['type'] = 'external';
-            if ($currentProduct && (string)$product->price->buynow <= current($currentProduct)->price){
-                if ((string)$product->price->productPriceOld && (string)$product->price->productPriceOld > 0){
-                    $data['regular_price'] = (string)$product->price->productPriceOld;
-                }else{
-                    $data['regular_price'] = NULL;
-                }
-                $data['sale_price'] = (string)$product->price->buynow;
-                $data['external_url'] = (string)$product->uri->awTrack;
-            }
 
             if (!$currentProduct) {
                 $categorieId = NULL;
@@ -126,6 +117,11 @@ class ImportCdiscountCommand extends Command
                     'value' => (string)$product->text->name
                 ];
 
+                $data['sale_price'] = (string)$product->price->buynow;
+                if ((string)$product->price->productPriceOld && (string)$product->price->productPriceOld > 0){
+                    $data['regular_price'] = (string)$product->price->productPriceOld;
+                }
+                $data['external_url'] = (string)$product->uri->awTrack;
                 $data['categories'] = $categories;
                 $data['name'] = (string)$product->text->name;
                 $data['description'] = (string)$product->text->desc;
@@ -138,6 +134,24 @@ class ImportCdiscountCommand extends Command
 
                 $jouet = $woocommerce->postProduct($data);
             }else{
+                if ((string)$product->price->buynow <= current($currentProduct)->price){
+                    if ((string)$product->price->productPriceOld && (string)$product->price->productPriceOld > 0){
+                        $data['regular_price'] = (string)$product->price->productPriceOld;
+                    }else{
+                        $data['regular_price'] = NULL;
+                    }
+                    $data['sale_price'] = (string)$product->price->buynow;
+                    $data['external_url'] = (string)$product->uri->awTrack;
+                }
+
+                if (!(string)$product->price->buynow ||(string)$product->price->buynow == NULL){
+                    $data['sale_price'] = (string)$product->price->buynow;
+                }
+                if (!(string)$product->uri->awTrack ||(string)$product->uri->awTrack == NULL){
+                    $data['external_url'] = (string)$product->uri->awTrack;
+                }
+
+
                 $metasdata = current($currentProduct)->meta_data;
                 $retailer = [];
                 $retailers = [];
