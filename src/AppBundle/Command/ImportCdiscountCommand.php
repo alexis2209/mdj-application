@@ -135,6 +135,7 @@ class ImportCdiscountCommand extends Command
                 ];
 
                 $jouet = $woocommerce->postProduct($data);
+                echo "NOUVEAU JOUET : ";
             }else{
 
                 $data['sale_price'] = (string)$product->price->buynow;
