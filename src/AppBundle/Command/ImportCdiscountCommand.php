@@ -134,6 +134,7 @@ class ImportCdiscountCommand extends Command
 
                 $jouet = $woocommerce->postProduct($data);
             }else{
+                var_dump(current($currentProduct));exit;
                 if ((string)$product->price->buynow <= current($currentProduct)->price){
                     if ((string)$product->price->productPriceOld && (string)$product->price->productPriceOld > 0){
                         $data['regular_price'] = (string)$product->price->productPriceOld;
@@ -144,7 +145,7 @@ class ImportCdiscountCommand extends Command
                     $data['external_url'] = (string)$product->uri->awTrack;
                 }
 
-                if (!current($currentProduct)->price ||current($currentProduct)->price == NULL){
+                if (!current($currentProduct)->sale_price ||current($currentProduct)->sale_price == NULL){
                     $data['sale_price'] = (string)$product->price->buynow;
                 }
                 if (!current($currentProduct)->external_url ||current($currentProduct)->external_url == NULL){
