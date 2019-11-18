@@ -222,6 +222,8 @@ class ImportMisterGoodDealCommand extends Command
                 echo $i . ' ' . (string)$product->text->name . "\n";
                 $i++;
             }
+            unlink("/tmp/zanox_mistergooddeal".$key.".xml.gz");
+            unlink("/tmp/zanox_mistergooddeal".$key.".xml");
         }
 
 
