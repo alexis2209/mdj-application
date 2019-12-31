@@ -10,6 +10,8 @@
 
 {% block corejs %}
     {{ parent() }}
+    <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
     {% javascripts output="js/components.min.js"
     "components/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js" %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
@@ -29,7 +31,7 @@
     <ul class="sidebar-menu" data-widget="tree">
         <li class="header">MAIN NAVIGATION</li>
         <li class="{% if app.request.get('_route') == "homepage" %}active{% endif %}"><a href="{{ path("admin_dashboard") }}"><i class="fa fa-dashboard current"></i> <span>Dashboard</span></a></li>
-        <li class="{% if app.request.get('_route') == "categories" %}active{% endif %}"><a href="{{ path("admin_categories_cdiscount") }}"><i class="fa fa-users"></i> <span>Categories Cdiscount</span></a></li>
+        <li class="{% if app.request.get('_route') == "categories" %}active{% endif %}"><a href="{{ path("admin_categories_index") }}"><i class="fa fa-users"></i> <span>Categories Cdiscount</span></a></li>
         <li class="{% if app.request.get('_route') == "event-index" %}active{% endif %}"><a href="{{ path("admin_dashboard") }}"><i class="fa fa-sitemap"></i> <span>Event Service</span></a></li>
 
     </ul>

@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Ekino\WordpressBundle\Repository\TermRepository;
 
-class CatMistergooddealRepository extends EntityRepository
+class CatOxybulRepository extends EntityRepository
 {
 
 }

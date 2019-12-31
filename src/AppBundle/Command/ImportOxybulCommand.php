@@ -57,15 +57,6 @@ class ImportOxybulCommand extends Command
 
             $data = [];
             $data['type'] = 'external';
-            if ($currentProduct && (string)$product->price->buynow <= current($currentProduct)->price){
-                if ((string)$product->price->productPriceOld && (string)$product->price->productPriceOld > 0){
-                    $data['regular_price'] = (string)$product->price->productPriceOld;
-                }else{
-                    $data['regular_price'] = NULL;
-                }
-                $data['sale_price'] = (string)$product->price->buynow;
-
-            }
 
             $data['external_url'] = (string)$product->uri->awTrack;
 
@@ -126,6 +117,11 @@ class ImportOxybulCommand extends Command
                     'value' => (string)$product->text->name
                 ];
 
+                $data['sale_price'] = (string)$product->price->buynow;
+                $data['regular_price'] = (string)$product->price->buynow;
+                if ((string)$product->price->productPriceOld && (string)$product->price->productPriceOld > 0){
+                    $data['regular_price'] = (string)$product->price->productPriceOld;
+                }
                 $data['images'] = [];
                 $data['categories'] = $categories;
                 $data['name'] = (string)$product->text->name;

@@ -3,23 +3,15 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#infrastructure-related-configuration
 parameters:
     database_host: 127.0.0.1
-    database_port: ~
+    database_port: null
     database_name: monde-des-jouets
-    database_user: root
+    database_user: phpmyadmin
     database_password: Alexsplif2209
-    # You should uncomment this if you want to use pdo_sqlite
-    #database_path: '%kernel.project_dir%/var/data/data.sqlite'
-
     mailer_transport: smtp
     mailer_host: 127.0.0.1
-    mailer_user: ~
-    mailer_password: ~
-
-    # A secret key that's used to generate certain security-related tokens
-    secret: ThisTokenIsNotSoSecretChangeIt
-
-    # WOOCOMMERCE
-    urlWoocommerce: http://monde-des-jouets.test/
-    consumerKeyWoocommerce: sdfgsdg
-    consumerSecretWoocommerce: sdfgsdf
-
+    mailer_user: null
+    mailer_password: null
+    secret: 5749bf38781dcc2abdc01ce8a8943907b7fd0b86
+    urlWoocommerce: 'http://monde-des-jouets.test/'
+    consumerKeyWoocommerce: ck_18c059164664d2f46a038d906534c5b9b27fda1b
+    consumerSecretWoocommerce: cs_1775965cf47d6f6cc249ab6b03e363d767e7e7fb

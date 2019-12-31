@@ -1,0 +1,16 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+{% block additional_style_assetic %}
+    <link href="{{ asset('bundles/app/css/supervisord/tail.css') }}" rel="stylesheet">
+{% endblock additional_style_assetic %}
+
+{% block content %}
+<div class="row tail">
+    <h1>Tail {{ servername }} - {{ workername }}</h1>
+    <div class="row">
+        <div class="tail-content col-md-12">
+            {{ response[0]|nl2br }}
+        </div>
+    </div>
+</div>
+{% endblock %}

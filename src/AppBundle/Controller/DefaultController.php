@@ -7,10 +7,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @Route("/", name="admin_")
+ */
 class DefaultController extends Controller
 {
     /**
-     * @Route("/", name="admin_dashboard")
+     * @Route("/", name="dashboard")
      */
     public function indexAction(Request $request)
     {

@@ -1,6 +1,7 @@
 {% extends '@App/base.html.twig' %}
 
 {% block content %}
+    <script type="text/javascript" src="{{ asset('bundles/app/js/categories/gestion.js') }}"></script>
     <link rel="stylesheet" href="bundles/sbsadminlte/plugins/select2/dist/css/select2.min.css">
     <div class="box">
         <div class="box-header">
@@ -18,20 +19,18 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for catCdiscount in catsCdiscount %}
+                {% for categorie in categories %}
                     <tr>
-                        <form method="POST">
-                        <td>{{ catCdiscount.id }}</td>
-                        <td>{{ catCdiscount.libelle }}</td>
-                        <td>
-                            <select class="form-control select2" style="width: 100%;">
+                        <td style="width:10%">{{ categorie.id }}</td>
+                        <td style="width:40%">{{ categorie.libelle }}</td>
+                        <td style="width:40%">
+                            <select class="form-control select2 " id="selectwpcat{{ categorie.id }}" style="width: 100%;">
                                 {% for key, catWp in catsWp %}
                                     <option value="{{ key }}">{{ catWp.parent }}{{ catWp.name }}</option>
                                 {% endfor %}
                             </select>
                         </td>
-                        <td></td>
-                        </form>
+                        <td style="width:10%"><button class="btn btn-primary validCateg" data-source="{{ categorie.id }}">Valider</button></td>
                     </tr>
 
                 {% endfor %}

@@ -100,5 +100,50 @@ services:
         tags:
             -  { name: console.command }
 
+    app.services.supervisord.xmlrpc:
+        public: true
+        class: AppBundle\Services\Supervisord\XmlRpcService
+
+
+
+    app.services.workers.downloadfiles:
+        public: true
+        class: AppBundle\Services\Workers\DownloadService
+        arguments: ["@service_container"]
+
+
+    app.services.workers.parsefiles:
+        public: true
+        class: AppBundle\Services\Workers\ParseService
+        arguments: ["@service_container"]
+
+    app.services.workers.checkproducts:
+        public: true
+        class: AppBundle\Services\Workers\CheckProductService
+        arguments: ["@service_container"]
+
+    app.services.workers.createproducts:
+        public: true
+        class: AppBundle\Services\Workers\CreateProductService
+        arguments: ["@service_container"]
+
+    app.services.workers.updateproducts:
+        public: true
+        class: AppBundle\Services\Workers\UpdateProductService
+        arguments: ["@service_container"]
+
+    app.services.import.awin:
+        public: true
+        class: AppBundle\Services\Import\AwinService
+        arguments: ["@service_container", "@ekino.wordpress.manager.post_meta_default", "@monolog.logger"]
+
+    app.services.import.effiliation:
+        public: true
+        class: AppBundle\Services\Import\EffiliateService
+        arguments: ["@service_container", "@ekino.wordpress.manager.post_meta_default", "@monolog.logger"]
+
+
+
+
 
 

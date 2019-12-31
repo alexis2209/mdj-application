@@ -20,6 +20,8 @@ class AppKernel extends Kernel
             new SbS\AdminLTEBundle\SbSAdminLTEBundle(),
             new AppBundle\AppBundle(),
             new Ekino\WordpressBundle\EkinoWordpressBundle(),
+            new OldSound\RabbitMqBundle\OldSoundRabbitMqBundle(),
+            new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
